@@ -24,6 +24,11 @@
   "nyc": {
     "reporter": ["text", "html", "lcov"],
     "exclude": ["test/**", "node_modules/**", "coverage/**", ".nyc_output/**", "server.js"],
-    "all": true
+    "all": true,
+    "check-coverage": true,
+    "statements": 80,
+    "branches": 80,
+    "functions": 80,
+    "lines": 80
   }
 }

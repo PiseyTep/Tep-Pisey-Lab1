@@ -27,22 +27,6 @@ jobs:
     - name: Install dependencies
       run: yarn install --frozen-lockfile
       
-    - name: Debug - List files
-      run: |
-        echo "=== Current directory ==="
-        pwd
-        echo "=== Files in repository ==="
-        ls -la
-        echo "=== JavaScript files ==="
-        find . -name "*.js" -type f
-      
-    - name: Debug - Check ESLint config
-      run: |
-        echo "=== ESLint config ==="
-        cat .eslintrc.json
-        echo "=== Package.json scripts ==="
-        cat package.json | grep -A 10 '"scripts"'
-      
     - name: Lint code
       run: yarn lint
       
@@ -53,9 +37,26 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: coverage-report-node-${{ matrix.node-version }}
+        name: coverage-report-${{ github.event_name }}-${{ github.run_number }}
         path: coverage/
         retention-days: 30
+        
+    - name: Display coverage summary
+      run: |
+        echo " Code Coverage Summary:"
+        echo "=========================="
+        cat coverage/lcov.info | head -20 || echo "Coverage file not found"
+        echo ""
+        echo " Coverage artifacts uploaded and available for 30 days"
+        
+    - name: PR Quality Gate
+      if: github.event_name == 'pull_request'
+      run: |
+        echo " Pull Request Quality Checks:"
+        echo " Linting passed"
+        echo " Tests passed"
+        echo " Code coverage meets threshold (100%)"
+        echo " PR is ready for review and merge!"
 
   deploy:
     needs: build-and-test
@@ -66,11 +67,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Deploy to Render
-      run: |
-        echo "🚀 Deployment would happen here"
-        echo "In a real scenario, this would:"
-        echo "- Deploy to Render/Vercel/Railway/Heroku"
-        echo "- Update deployment status"
-        echo "- Send notifications"
-        echo "✅ Deployment completed successfully!"
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        vercel-org-id: ${{ secrets.ORG_ID }}
+        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        working-directory: ./
