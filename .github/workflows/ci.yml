@@ -38,9 +38,7 @@ jobs:
       if: always()
       with:
         name: coverage-report-node-${{ matrix.node-version }}
-        path: |
-          coverage/
-          .nyc_output/
+        path: coverage/
         retention-days: 30
 
   deploy:
