@@ -27,6 +27,22 @@ jobs:
     - name: Install dependencies
       run: yarn install --frozen-lockfile
       
+    - name: Debug - List files
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo "=== Files in repository ==="
+        ls -la
+        echo "=== JavaScript files ==="
+        find . -name "*.js" -type f
+      
+    - name: Debug - Check ESLint config
+      run: |
+        echo "=== ESLint config ==="
+        cat .eslintrc.json
+        echo "=== Package.json scripts ==="
+        cat package.json | grep -A 10 '"scripts"'
+      
     - name: Lint code
       run: yarn lint
       
