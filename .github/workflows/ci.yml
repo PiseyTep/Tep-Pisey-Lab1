@@ -30,5 +30,33 @@ jobs:
     - name: Lint code
       run: yarn lint
       
-    - name: Run tests
-      run: yarn test
+    - name: Run tests with coverage
+      run: yarn test:coverage
+      
+    - name: Upload coverage reports as artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report-node-${{ matrix.node-version }}
+        path: |
+          coverage/
+          .nyc_output/
+        retention-days: 30
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to Render
+      run: |
+        echo "🚀 Deployment would happen here"
+        echo "In a real scenario, this would:"
+        echo "- Deploy to Render/Vercel/Railway/Heroku"
+        echo "- Update deployment status"
+        echo "- Send notifications"
+        echo "✅ Deployment completed successfully!"

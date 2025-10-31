@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: tep-pisey-lab1
+    env: node
+    plan: free
+    buildCommand: yarn install
+    startCommand: yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
