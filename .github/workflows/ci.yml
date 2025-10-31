@@ -23,9 +23,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+    
+    - name: Debug - Show Node and Yarn versions
+      run: |
+        node --version
+        yarn --version
         
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+      
+    - name: Debug - List installed packages
+      run: ls -la node_modules/.bin/
       
     - name: Lint code
       run: yarn lint

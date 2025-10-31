@@ -1,10 +1,7 @@
-const js = require('@eslint/js');
-
 module.exports = [
-  js.configs.recommended,
   {
     languageOptions: {
-      ecmaVersion: 12,
+      ecmaVersion: 2021,
       sourceType: 'commonjs',
       globals: {
         // Node.js globals
@@ -26,6 +23,11 @@ module.exports = [
         afterEach: 'readonly'
       }
     },
-    rules: {}
+    rules: {
+      // Basic ESLint recommended rules
+      'no-unused-vars': 'error',
+      'no-undef': 'error',
+      'no-console': 'off'
+    }
   }
 ];
